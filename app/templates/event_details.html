@@ -32,7 +32,7 @@
               {% endif %}
             </td>
             <td>{{ post.comment | nl2br }}</td>
-            <td>{{ post.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td>{{ post.timestamp | datetimeformat }}</td>
           </tr>
         {% endfor %}
       </tbody>
