@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}投稿一覧 - {{ event_summary or event_id }}{% endblock %}
+
+{% block content %}
+  <h1>投稿一覧: {{ event_summary or event_id }}</h1>
+  <a href="{{ url_for('main.post_attendance', event_id=event_id) }}" class="btn btn-primary mb-3">参加可否を投稿/編集する</a>
+
+  {% if posts %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>投稿者</th>
+          <th>出欠</th>
+          <th>コメント</th>
+          <th>投稿日時</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for post in posts %}
+          <tr>
+            <td>{{ post.user_name }}</td>
+            <td>
+              {% if post.status == '出席' %}
+                <span class="badge bg-success">出席</span>
+              {% elif post.status == '欠席' %}
+                <span class="badge bg-danger">欠席</span>
+              {% elif post.status == '未定' %}
+                <span class="badge bg-warning text-dark">未定</span>
+              {% else %}
+                {{ post.status }}
+              {% endif %}
+            </td>
+            <td>{{ post.comment | nl2br }}</td>
+            <td>{{ post.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>まだ投稿はありません。</p>
+  {% endif %}
+  <a href="{{ url_for('main.index') }}" class="btn btn-secondary mt-3">予定一覧に戻る</a>
+{% endblock %}

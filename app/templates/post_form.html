@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}参加可否を投稿 - {{ event_summary or event_id }}{% endblock %}
+
+{% block content %}
+  <h1>{{ '投稿編集' if existing_post else '参加可否を投稿' }}: {{ event_summary or event_id }}</h1>
+
+  <form method="POST">
+    {# CSRF token if using Flask-WTF #}
+    {# {{ form.hidden_tag() }} #}
+    <div class="mb-3">
+      <label for="status" class="form-label">出欠</label>
+      <select class="form-select" id="status" name="status" required>
+        <option value="出席" {% if existing_post and existing_post.status == '出席' %}selected{% endif %}>出席</option>
+        <option value="欠席" {% if existing_post and existing_post.status == '欠席' %}selected{% endif %}>欠席</option>
+        <option value="未定" {% if not existing_post or existing_post.status == '未定' %}selected{% endif %}>未定</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="comment" class="form-label">コメント (任意)</label>
+      <textarea class="form-control" id="comment" name="comment" rows="3">{{ existing_post.comment if existing_post else '' }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">{{ '更新する' if existing_post else '投稿する' }}</button>
+    <a href="{{ url_for('main.event_details', event_id=event_id) }}" class="btn btn-secondary">キャンセル</a>
+  </form>
+{% endblock %}

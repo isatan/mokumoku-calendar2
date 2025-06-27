@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}予定一覧{% endblock %}
+
+{% block content %}
+  <h1>予定一覧</h1>
+  {% if events %}
+    <ul class="list-group">
+      {% for event in events %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <h5><a href="{{ url_for('main.event_details', event_id=event.id) }}">{{ event.summary }}</a></h5>
+            <p>{{ event.start.dateTime or event.start.date }} - {{ event.end.dateTime or event.end.date }}</p>
+          </div>
+          <div>
+            <span class="badge bg-primary rounded-pill me-1">投稿数: {{ event.posts_count | default(0) }}</span>
+            <span class="badge bg-success rounded-pill me-1">出席: {{ event.attending_count | default(0) }}</span>
+            <span class="badge bg-warning rounded-pill text-dark">未定: {{ event.tentative_count | default(0) }}</span>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+     <nav aria-label="Page navigation" class="mt-4">
+      <ul class="pagination justify-content-center">
+        <li class="page-item {% if not has_prev_page %}disabled{% endif %}">
+          <a class="page-link" href="{{ url_for('main.index', page=page-1) }}">前へ</a>
+        </li>
+        {# Consider adding page numbers if you have total number of items #}
+        <li class="page-item {% if not has_next_page %}disabled{% endif %}">
+          <a class="page-link" href="{{ url_for('main.index', page=page+1) }}">次へ</a>
+        </li>
+      </ul>
+    </nav>
+  {% else %}
+    <p>予定はありません。</p>
+  {% endif %}
+{% endblock %}
